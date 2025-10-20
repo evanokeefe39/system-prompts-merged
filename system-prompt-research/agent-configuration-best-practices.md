@@ -1,8 +1,6 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
+# Best Practices for Creating Agent Configuration Files Across Vibe Coding Apps and Specific Tools
 
-# Best Practices for Creating Agent Configuration Files Across Vibe Coding Apps
-
-Based on comprehensive research across all major vibe coding applications, here are the definitive best practices for configuring AI coding agents, organized from universal principles to tool-specific approaches.
+Based on comprehensive research across all major vibe coding applications, here are the definitive best practices for configuring AI coding agents, organized from universal principles to tool-specific approaches. This includes general best practices and specific guidance for tools like OpenAI Codex and OpenCode.
 
 ## Executive Summary: The Commonalities
 
@@ -70,7 +68,6 @@ AGENTS.md emerged from collaboration between OpenAI, Google, Cursor, Sourcegraph
 - **Version controlled** - standard markdown file in your repo
 - **Reduces clutter** - one file instead of many tool-specific configs
 - **Nested support** - hierarchical rules for monorepos
-
 
 ### AGENTS.md Template Structure
 
@@ -147,7 +144,6 @@ Ask first:
 - Open draft PR with notes if uncertain
 ```
 
-
 ### Nested AGENTS.md for Monorepos
 
 For complex projects, use hierarchical AGENTS.md files where more specific rules override general ones:[^4][^2][^1]
@@ -194,7 +190,6 @@ ln -s AGENTS.md CLAUDE.md
 Strictly follow the rules in ./AGENTS.md
 ```
 
-
 ## Tool-Specific Best Practices
 
 ### Cursor: Most Sophisticated Configuration
@@ -228,7 +223,7 @@ Use strict mode with these configurations:
 - strict: true
 
 ## Example
-\`\`\`typescript
+```typescript
 // Good: explicit optional handling
 interface User {
   name: string;
@@ -239,7 +234,7 @@ interface User {
 function process(data) {  // missing types
   return data.value;
 }
-\`\`\`
+```
 ```
 
 **Frontmatter options:**[^12][^9][^6]
@@ -262,7 +257,6 @@ function process(data) {  // missing types
 - Use globs for file-specific rules
 - Reference rules with `@rule-name` in prompts
 - Keep each rule focused (under 6,000 characters)
-
 
 ### Cline: Simple Yet Powerful with Folder System
 
@@ -341,7 +335,6 @@ DO NOT read or modify:
 - Any files with API keys, tokens, credentials
 ```
 
-
 ### Windsurf: XML-Tagged Organization
 
 **File structure:**
@@ -402,13 +395,6 @@ Rule: Zod for validation
 - Separate global vs. workspace rules
 - Check for conflicts with Global AI Rules first
 - Access via Settings > Set Workspace AI Rules > Edit Rules
-
-**Rules discovery** - Windsurf automatically finds rules in:[^8]
-
-- `.windsurf/rules` in current workspace
-- `.windsurf/rules` in subdirectories
-- `.windsurf/rules` up to git root
-
 
 ### GitHub Copilot: Path-Specific Precision
 
@@ -482,7 +468,6 @@ applyTo: "**/*.ts,**/*.tsx"
 - Whitespace ignored (format for readability)
 - Can reference files: `#file:../packages/foo.js`
 
-
 ### Roo Code: Mode-Based Profiles
 
 Roo Code takes a different approach using **mode-based configuration profiles** rather than simple rules files.[^26][^27][^28][^29]
@@ -528,7 +513,6 @@ Roo Code takes a different approach using **mode-based configuration profiles** 
 - Configure auto-approval settings based on trust level
 - Use MCP servers for extended functionality
 - Set up API keys per provider
-
 
 ### Aider: Convention-Focused CLI Tool
 
@@ -581,7 +565,6 @@ read: CONVENTIONS.md
 - Name file AGENTS.md for interoperability with other tools
 - Focus on patterns and conventions, not implementation details
 - Configure in `.aider.conf.yml` for automatic loading
-
 
 ### Zed: JSON Profile-Based Configuration
 
@@ -637,7 +620,6 @@ Access via `zed: open keymap` command
 - Enable follow mode to track agent's codebase navigation
 - Can run external agents (Claude Code, Gemini CLI) via Zed's agent panel
 
-
 ### Google Jules: GitHub-Integrated Automation
 
 Jules takes a unique approach as an **asynchronous agent** that integrates directly with GitHub and automatically reads AGENTS.md.[^37][^38][^39][^40]
@@ -669,6 +651,125 @@ Jules takes a unique approach as an **asynchronous agent** that integrates direc
 - Jules is asynchronous - can work on multiple tasks concurrently
 - Free during beta phase (5 tasks/day limit)
 
+## GitHub Copilot's Ancestor: OpenAI Codex
+
+Although OpenAI Codex is largely superseded by newer agents, many concepts remain relevant for similar asynchronous coding bots.
+
+### Configuration Approach
+
+- **AGENTS.md First**: Codex reads `AGENTS.md` in the repository root by default—no additional config file is required.
+- **Task Prompts via Issues**: Operates by assigning GitHub issues to Codex, which then performs changes and submits pull requests.
+
+### Best Practices for Codex
+
+1. **Issue Templates**
+    - Include a clear description of the requested change, expected behavior, and links to relevant files.
+    - Reference specific AGENTS.md rules in the issue body (e.g., "Follow the Do's under `Commands` in AGENTS.md").
+2. **Branch Isolation**
+    - Always create a new branch per Codex task (e.g., `codex/feature-x`).
+    - Instruct Codex via the issue to create and commit in the task-specific branch.
+3. **Automated Testing in CI**
+    - Ensure CI runs lint, type checks, and tests on Codex's branches before merging.
+    - Include commands from AGENTS.md in CI config (e.g., `npm run tsc --noEmit`, `npm run vitest`).
+4. **Pull Request Templates**
+    - Use PR templates that reference AGENTS.md and require confirmation that rules were followed.
+    - Automate a checklist in the PR description: "✅ Lint/Type checks passed," "✅ Tests covering new code," "✅ AGENTS.md rules applied."
+5. **Rate Limits & API Keys**
+    - Use dedicated API keys for Codex with strict usage quotas.
+    - Rotate keys regularly and scope them to read/write only code repositories.
+6. **Prompt Engineering**
+    - Begin prompts with a concise summary: "Codex, generate a data-fetching hook following the rules in AGENTS.md."
+    - End prompts with explicit permission: "You may commit changes in branch `codex/feature-x` once tests pass."
+7. **Review & Oversight**
+    - Always perform a human code review before merging Codex-generated PRs.
+    - Confirm that Codex did not introduce security or license violations.
+
+## OpenCode-Specific Configuration
+
+OpenCode (e.g., Sourcegraph Amp) integrates deeply into editors and CI pipelines.
+
+### Configuration Approach
+
+- **AGENTS.md Compatible**: Reads `AGENTS.md` natively at project root or nearest directory.
+- **Workspace Settings**: Uses editor settings (VS Code, JetBrains) to enable or disable agentic features.
+- **CI Integration**: Can run `open-code analyze` in CI for automated code checks against AGENTS.md.
+
+### File Structure & Settings
+
+```
+project-root/
+├── AGENTS.md
+├── open-code.config.json       # Optional overrides
+└── .github/
+    └── workflows/
+        └── open-code-ci.yml    # CI workflow invoking OpenCode checks
+```
+
+#### Example `open-code.config.json`
+
+```json
+{
+  "rulesFile": "AGENTS.md",
+  "enableLintChecks": true,
+  "enableTestChecks": true,
+  "allowedCommands": [
+    "tsc --noEmit",
+    "eslint --fix",
+    "vitest run"
+  ],
+  "denyCommands": [
+    "npm run build",
+    "git push --force"
+  ],
+  "maxFileSizeKB": 200
+}
+```
+
+### Best Practices for OpenCode
+
+1. **Centralize in AGENTS.md**
+    - Define all conventions there; use `open-code.config.json` only for overrides (e.g., disabling specific rules temporarily).
+2. **Strict CI Enforcement**
+    - In `open-code-ci.yml`, add a job:
+
+```yaml
+jobs:
+  open-code-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run OpenCode Checks
+        run: open-code analyze --config open-code.config.json
+```
+
+    - Fail CI if any AGENTS.md rule is violated.
+3. **Editor Extensions**
+    - Install the OpenCode extension in VS Code or JetBrains.
+    - Configure "Live Analysis" to highlight AGENTS.md violations in real time.
+4. **Incremental Adoption**
+    - Start with `pre-commit` hooks that run `open-code analyze --staged`.
+    - Gradually enforce on all code by adding CI checks.
+5. **Granular Overrides**
+    - Use `open-code.config.json` to whitelist or blacklist specific rules per directory.
+    - Example:
+
+```json
+{
+  "overrides": [
+    {
+      "path": "legacy/",
+      "disableRules": ["no-legacy-patterns"]
+    }
+  ]
+}
+```
+
+6. **Performance Tuning**
+    - Set `maxFileSizeKB` to limit analysis on large auto-generated files.
+    - Cache linter and type-checker artifacts between CI runs.
+7. **Documentation & Onboarding**
+    - Include a section in `README.md` under "AI Agent Configuration" describing how to install and use the OpenCode extension and CI job.
+    - Provide sample workflows: "How to fix an AGENTS.md violation in VS Code."
 
 ## Common Configuration Patterns
 
@@ -683,12 +784,11 @@ Jules takes a unique approach as an **asynchronous agent** that integrates direc
 - Use MUI v3 (ensure v3 compatibility)
 - Use emotion css={{}} prop format
 - Use mobx with useLocalStore for state
-- Use design tokens from DynamicStyles.tsx
 - Keep components under 200 lines
 
 ## Don'ts
 - Do not hardcode colors (use tokens)
-- Do not use divs if component exists
+- Do not add divs if component exists
 - Do not add heavy dependencies without approval
 - Do not use class components (use functional)
 ```
@@ -701,7 +801,6 @@ Jules takes a unique approach as an **asynchronous agent** that integrates direc
 - Follow best practices
 - Be consistent
 ```
-
 
 ### The "Commands" Pattern
 
@@ -730,7 +829,6 @@ npm run build
 npm run build  # Always run full build (slow!)
 ```
 
-
 ### The "Good/Bad Examples" Pattern
 
 **Point to actual files:**[^6][^1]
@@ -754,8 +852,7 @@ npm run build  # Always run full build (slow!)
 - Avoid bad patterns
 ```
 
-
-### The "Safety \& Permissions" Pattern
+### The "Safety & Permissions" Pattern
 
 **Be explicit about boundaries:**[^1][^6]
 
@@ -778,7 +875,6 @@ Ask first:
 - Full builds or E2E test suites
 ```
 
-
 ## Multi-Tool Configuration Strategy
 
 **Best practice:** Use AGENTS.md as single source of truth, symlink tool-specific files:
@@ -798,9 +894,8 @@ project-root/
 
 ```markdown
 # CLAUDE.md
-Strictly follow all rules in ./AGENTS.md
+Strictly follow the rules in ./AGENTS.md
 ```
-
 
 ## Testing Your Configuration
 
@@ -845,7 +940,6 @@ Strictly follow all rules in ./AGENTS.md
 !.github/copilot-instructions.md
 ```
 
-
 ## Key Takeaways
 
 1. **Start with AGENTS.md** - the universal standard adopted by 20,000+ projects
@@ -860,7 +954,8 @@ Strictly follow all rules in ./AGENTS.md
 10. **Test regularly** - verify rules actually influence agent behavior
 
 The vibe coding ecosystem is converging on common patterns while maintaining tool-specific strengths. By following these best practices and adopting AGENTS.md as your foundation, you'll create a maintainable, portable configuration that works across the entire ecosystem.
-<span style="display:none">[^100][^101][^102][^103][^104][^41][^42][^43][^44][^45][^46][^47][^48][^49][^50][^51][^52][^53][^54][^55][^56][^57][^58][^59][^60][^61][^62][^63][^64][^65][^66][^67][^68][^69][^70][^71][^72][^73][^74][^75][^76][^77][^78][^79][^80][^81][^82][^83][^84][^85][^86][^87][^88][^89][^90][^91][^92][^93][^94][^95][^96][^97][^98][^99]</span>
+
+By extending universal AGENTS.md principles with Codex's issue-driven workflow and OpenCode's editor/CI integration, you ensure consistency, speed, and maintainability across all AI-assisted coding tools.
 
 <div align="center">⁂</div>
 
@@ -884,7 +979,7 @@ The vibe coding ecosystem is converging on common patterns while maintaining too
 
 [^10]: https://docs.cline.bot/features/cline-rules
 
-[^11]: https://publish.obsidian.md/aixplore/AI+Development+\&+Agents/mastering-clinerules-configuration
+[^11]: https://publish.obsidian.md/aixplore/AI+Development+%26+Agents/mastering-clinerules-configuration
 
 [^12]: https://forum.cursor.com/t/optimal-structure-for-mdc-rules-files/52260
 
@@ -968,7 +1063,7 @@ The vibe coding ecosystem is converging on common patterns while maintaining too
 
 [^52]: https://www.youtube.com/watch?v=0c_NpEBLltM
 
-[^53]: https://www.eesel.ai/fr/blog/cursor-vs-windsurf
+[^53]: https://www.eesel.ai/blog/cursor-vs-windsurf
 
 [^54]: https://pnote.eu/notes/agents-md/
 
@@ -1044,7 +1139,7 @@ The vibe coding ecosystem is converging on common patterns while maintaining too
 
 [^90]: https://www.youtube.com/watch?v=ZmDtilWdiDg
 
-[^91]: https://zed.dev/docs/ai/external-agents
+[^91]: https://docs.replit.com/tutorials/vibe-coding-101
 
 [^92]: https://martinfowler.com/articles/exploring-gen-ai/autonomous-agents-codex-example.html
 
@@ -1061,14 +1156,3 @@ The vibe coding ecosystem is converging on common patterns while maintaining too
 [^98]: https://www.reddit.com/r/CLine/comments/1ke29a4/format_for_cline_rules_files/
 
 [^99]: https://www.reddit.com/r/Codeium/comments/1gsl9cv/rules_for_the_ai_in_windsurf_like_the_cursorrules/
-
-[^100]: https://github.com/cline/cline/discussions/1703
-
-[^101]: https://www.youtube.com/watch?v=aBNJNPpkOBw
-
-[^102]: https://github.com/cline/cline/issues/4295
-
-[^103]: https://docs.github.com/en/copilot/tutorials/customization-library/custom-instructions/your-first-custom-instructions
-
-[^104]: https://github.com/cline/cline/discussions/361
-

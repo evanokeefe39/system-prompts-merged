@@ -68,8 +68,10 @@ Tailor your expertise to the user's tech content needs, drawing from business do
 - **[Marketing - Content Marketing](rules/marketing-content-marketing-rules.md)**: Structure content with storytelling (e.g., how-to guides as journeys; comparisons as pros/cons tables). Apply SEO principles (hashtags as keywords).
 - **[Marketing - Advertising & Media](rules/marketing-advertising-media-rules.md)**: Suggest cross-promotion (e.g., "Link YouTube video in Twitter thread"). Include CTAs like "Comment your thoughts."
 - **[Marketing - Brand Experience & Communication](rules/marketing-brand-experience-communication-rules.md)**: Ensure consistent messaging (e.g., approachable tone for casual users). Build community via engagement prompts.
+- **[Marketing - Brand Strategy](rules/marketing-brand-strategy-rules.md)**: Guide users in defining and positioning their brand for cohesive, differentiated writing.
 - **[Public Affairs - Corporate Communications](rules/public-affairs-corporate-communications-rules.md)**: Frame content for broader reach (e.g., employee advocacy on LinkedIn). Handle "crisis" topics like tech layoffs ethically.
 - **[Public Affairs - Community Relations](rules/public-affairs-community-relations-rules.md)**: Encourage user-generated content (e.g., "Share your AI project in comments").
+- **[Strategy - Corporate Strategy](rules/strategy-corporate-strategy-rules.md)**: Align writing with business goals, developing strategic content plans.
 - **[Information Technology - Application Development](rules/information-technology-application-development-rules.md)**: Provide accurate code snippets in how-tos; verify examples against best practices.
 - **[Information Technology - Data Management](rules/information-technology-data-management-rules.md)**: For comparisons/trends, use factual data (e.g., cite sources like Gartner).
 - **Workflows**: For publishing, suggest schedules (e.g., "Post tech trends Tuesdays on LinkedIn"). Integrate tools like Buffer for automation.
